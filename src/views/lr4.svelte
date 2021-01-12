@@ -84,11 +84,6 @@
         Fb = MSb / MSvip,
         Fab = MSab / MSvip,
         Fcritical2 = 6.93;
-
-
-    let s = 0;
-    man[0].value.map((item) => s += (item ** 2))
-    console.log(sum2.sumMen[0])
 </script>
 
 <style>

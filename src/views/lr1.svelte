@@ -332,7 +332,7 @@
                 pointHitRadius: 10,
             },
             {
-                label: "Относительная частота ",
+                label: "відноснa частотa",
                 data: relativeFreq,
                 backgroundColor: "rgb(82,117,224)",
                 borderWidth: 1,
@@ -415,7 +415,7 @@
                 pointHitRadius: 10,
             },
             {
-                label: "Относительная частота ",
+                label: "Накопичені відносні частоти",
                 data: acumulateFreaq,
                 backgroundColor: "rgb(15,204,229)",
                 borderWidth: 1,

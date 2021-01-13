@@ -260,18 +260,22 @@
     </table>
 </div>
 
-<div class="card text-white {sum2 - sum === sum1 ? 'bg-success' : 'bg-danger'} mb-3" style="max-width: 20rem;">
-    <div class="card-header">Перевірка результату:</div>
-    <div class="card-body">
-        <p class="card-text">
-            {sum2 - sum === sum1 ? "сходиться" : "не сходиться"} <br>
-            X(кр)<sup>2</sup>(0,01;{k}) = 18,5 <br>
-            X(сп)<sup>2</sup> = {sum1.toFixed(2)} <br>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card text-white {sum2 - sum === sum1 ? 'bg-success' : 'bg-danger'} mb-3">
+            <div class="card-header">Перевірка результату:</div>
+            <div class="card-body">
+                <p class="card-text">
+                    {sum2 - sum === sum1 ? "сходиться" : "не сходиться"} <br>
+                    X(кр)<sup>2</sup>(0,01;{k}) = 18,5 <br>
+                    X(сп)<sup>2</sup> = {sum1.toFixed(2)} <br>
 
-            {@html sum1 > 0 && sum1 <= 18.5
-                ? 'X(сп)<sup>2</sup> належить до (0; 18.5) <br> гіпотеза про нормальний закон розподілу генеральної сукупності ознаки X приймається'
-                : 'X(сп)<sup>2</sup> не належить до (0; 18.5) <br> гіпотеза про нормальний закон розподілу генеральної сукупності ознаки X не приймається'}
-        </p>
+                    {@html sum1 > 0 && sum1 <= 18.5
+                        ? 'X(сп)<sup>2</sup> належить до (0; 18.5) <br> гіпотеза про нормальний закон розподілу генеральної сукупності ознаки X приймається'
+                        : 'X(сп)<sup>2</sup> не належить до (0; 18.5) <br> гіпотеза про нормальний закон розподілу генеральної сукупності ознаки X не приймається'}
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 

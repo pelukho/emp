@@ -1,6 +1,6 @@
 <script>
 
-    let numberOfList = 10,
+    let numberOfList = 20,
         courses = ['курси', 'бакалавр', 'магістр'],
         man = [
             {

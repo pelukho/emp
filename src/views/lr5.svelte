@@ -1,8 +1,8 @@
 <script>
     import Scatter from 'svelte-chartjs/src/Scatter.svelte';
 
-    let x = [34, 32, 30, 28, 26, 24, 22, 20],
-        y = [14, 13, 12, 11, 10, 9, 12, 8],
+    let x = [68, 70, 73, 75, 81, 88, 92, 94],
+        y = [8, 8.5, 9, 9.5, 10, 10.5, 11.5, 11],
         x2 = x.map(item => item ** 2),
         y2 = y.map(item => item ** 2),
         xy = x.map((item, index) => item * y[index]),

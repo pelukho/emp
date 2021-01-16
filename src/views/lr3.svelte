@@ -1,13 +1,13 @@
 <script>
-    let defaultGroup = 10,
-        fCritical = 2.99,
+    let defaultGroup = 20,
+        fCritical = 3.83,
+        dzal = 0,
         courses = [2 * defaultGroup, defaultGroup, 3 * defaultGroup, 4, 2, 3, 1, 4, 5],
         privateSchool = [defaultGroup, defaultGroup, 2 * defaultGroup, 1, 2, 3, 1, 2, 3],
         bachelor = [2 * defaultGroup, defaultGroup, 2 * defaultGroup, 1, 2, 2, 3, 1, 3],
         magistr = [2 * defaultGroup, defaultGroup, 3 * defaultGroup, 2, 1, 3, 4, 2, 2],
         candidatOfScience = [3 * defaultGroup, 2 * defaultGroup, 4 * defaultGroup, 3, 4, 3, 3, 3, 3],
-        summery = [],
-        average = [],
+        s2 = [],
         factors = [
             {
                 name: 'курси',
@@ -30,61 +30,43 @@
                 values: candidatOfScience
             }
         ],
-        n = factors.length, j = courses.length, N = n * j;
+        summery = factors.map(item => {
+            return item.values.reduce((s,i) => {return s+=i}, 0)
+        }),
+        n = courses.length, j = factors.length, N = n * j,
+        average = summery.map(item => item / n);
 
     for (let i = 0, len = courses.length; i < len; i++) {
-        summery.push(courses[i] + privateSchool[i] + bachelor[i] + magistr[i] + candidatOfScience[i]);
-        average.push(summery[i] / n);
+        s2.push((courses[i] ** 2) + (privateSchool[i] ** 2) + (bachelor[i] ** 2) + (magistr[i] ** 2) + (candidatOfScience[i] ** 2))
     }
 
-    // D фактичне
-    let dActual = arr => {
-        let sum = arr.reduce((sum, item) => sum += item);
-        let sumSquare = 0;
+    s2 = s2.reduce((sum, item) => {
+        return sum += item
+    }, 0);
 
-        arr.forEach(item => sumSquare += (item ** 2));
+    let kfac = j - 1,
+        kzag = N - 1,
+        kzal = kzag - kfac;
 
-        return (((1 / n) * sumSquare) - ((1 / N) * (sum ** 2))).toFixed(2);
-    };
-
-    // D загальне
-    let dAll = (arr1, arr2) => {
-        let sum = arr1.reduce((sum, item) => sum += item);
-        let sumSquare = 0;
-
-        arr2.forEach(item => {
-            item.values.forEach(item => sumSquare += (item ** 2));
-        });
-
-        return (sumSquare - (1 / N * (sum ** 2))).toFixed(2);
-    };
-
-    // D загальне
-    let dInteral = (arr1, arr2, arr3) => {
-        let sumSquare = 0;
-
-        for (let i = 0, len = arr1.length; i < len; i++) {
-            for (let j = 0, len = arr2.length; j < len; j++) {
-                sumSquare += (arr2[j].values[i] - arr3[i]) ** 2;
-            }
+    for (let i = 0, len = courses.length; i < len; i ++) {
+        for(let j = 0, len = factors.length; j < len; j++) {
+            dzal += ((factors[j].values[i] - average[j]) ** 2);
         }
+    }
 
-        return (sumSquare).toFixed(2);
-    };
+    let ev2 = summery.reduce((sum, item) => {
+            return sum += (item ** 2)
+        }, 0),
+        esum = summery.reduce((sum, item) => {
+            return sum += item
+        }, 0),
+        ex2 = (1 / N) * (esum ** 2),
+        dfac = (((1 / n) * ev2) - (ex2)),
+        dzag = (s2 - (ex2)),
+        MSfac = dfac / kfac,
+        MSzal = dzal / kzal,
+        femp = MSfac / MSzal;
 
-    // MS факт
-    let MsActual = (arr) => {
-        return (dActual(arr) / (j - 1)).toFixed(2);
-    };
-
-    // MS залишкове
-    let MsAll = (arr1, arr2, arr3) => {
-        return (dInteral(arr1, arr2, arr3) / ((N - 1) - (j - 1))).toFixed(2);
-    };
-
-    let kActual = j - 1,
-        kAll = N - 1,
-        kSub = kAll - kActual;
 </script>
 
 <div class="table-responsive mb-5">
@@ -92,16 +74,22 @@
         <thead>
         <tr>
             <th>Фактор</th>
-            <th colspan="{courses.length}" class="text-center">Заробітна плата, тисяч умовних одиниць</th>
+            <th>{factors[0].name}</th>
+            <th>{factors[1].name}</th>
+            <th>{factors[2].name}</th>
+            <th>{factors[3].name}</th>
+            <th>{factors[4].name}</th>
         </tr>
         </thead>
         <tbody>
-        {#each factors as factor, i}
+        {#each factors[0].values as f, i}
             <tr>
-                <td>{factor.name}</td>
-                {#each factor.values as val}
-                    <td>{val}</td>
-                {/each}
+                <td>{i + 1}</td>
+                <td>{factors[0].values[i]}</td>
+                <td>{factors[1].values[i]}</td>
+                <td>{factors[2].values[i]}</td>
+                <td>{factors[3].values[i]}</td>
+                <td>{factors[4].values[i]}</td>
             </tr>
         {/each}
         <tr>
@@ -136,43 +124,43 @@
     <hr class="my-4">
 
     <h4>1. Обчислюємо</h4>
-    <p>D<sub>факт</sub> = S<sub>факт</sub> = {dActual(summery)}</p>
+    <p>D<sub>факт</sub> = S<sub>факт</sub> = {dfac.toFixed(2)}</p>
     <hr class="my-4">
 
     <h4>2. Обчислюємо</h4>
-    <p>D<sub>заг</sub> = S<sub>заг</sub> = {dAll(summery, factors)}</p>
+    <p>D<sub>заг</sub> = S<sub>заг</sub> = {dzag.toFixed(2)}</p>
     <hr class="my-4">
 
     <h4>3. Обчислюємо</h4>
     <p>D<sub>внутр-групова ( залишкова )</sub> = S<sub>внутр-групова ( залишкова )</sub>
-        = {dInteral(courses, factors, average)}</p>
+        = {dzal.toFixed(2)}</p>
     <hr class="my-4">
 
     <h4>Перевірка:</h4>
-    <p>SS<sub>зал</sub> = SS<sub>заг</sub> - SS <sub>факт</sub> = {dAll(summery, factors)} - {dActual(summery)}
-        = {(dAll(summery, factors) - dActual(summery)).toFixed(2)}</p>
+    <p>SS<sub>зал</sub> = SS<sub>заг</sub> - SS <sub>факт</sub> = {dzag.toFixed(2)} - {dfac.toFixed(2)}
+        =  {dzag.toFixed(2) - dfac.toFixed(2)}</p>
     <hr class="my-4">
 
     <h4>4. Визначимо число степенів вільності</h4>
-    <p>k<sub>факт</sub> = j - 1 = {j} - 1 = {kActual};</p>
-    <p>k<sub>заг</sub> = N - 1 = {N} - 1 = {kAll};</p>
-    <p>k<sub>залишк</sub> = k<sub>заг</sub> - k<sub>факт</sub> = {N - 1} - {j - 1} = {kSub}</p>
+    <p>k<sub>факт</sub> = j - 1 = {j} - 1 = {kfac};</p>
+    <p>k<sub>заг</sub> = N - 1 = {N} - 1 = {kzag};</p>
+    <p>k<sub>залишк</sub> = k<sub>заг</sub> - k<sub>факт</sub> = {N - 1} - {j - 1} = {kzal}</p>
     <hr class="my-4">
 
     <h4>5. Обчислюємо</h4>
-    <p>MS<sub>факт</sub> = {MsActual(summery)}</p>
-    <p>MS<sub>залишк</sub> = {MsAll(courses, factors, average)}</p>
+    <p>MS<sub>факт</sub> = {MSfac.toFixed(2)}</p>
+    <p>MS<sub>залишк</sub> = {MSzal.toFixed(2)}</p>
     <hr class="my-4">
 
     <h4>6. Обчислюємо</h4>
-    <p>F<sub>emp</sub> = MS<sub>факт</sub> / MS<sub>залишк</sub> = {MsActual(summery)}
-        / {MsAll(courses, factors, average)}
-        = {(MsActual(summery) / MsAll(courses, factors, average)).toFixed(2)}</p>
+    <p>F<sub>emp</sub> = MS<sub>факт</sub> / MS<sub>залишк</sub> = {MSfac.toFixed(2)}
+        / {MSzal.toFixed(2)}
+        = {femp.toFixed(2)}</p>
     <hr class="my-4">
 
     <h4>Знаходимо в таблиці критичні значення критерія Фішера для &#11393; = 0,01</h4>
-    <p>F<sub>крит</sub>( &#11393; , k<sub>факт</sub> , k<sub>залиш</sub>) = F<sub>крит</sub>( 0,01;{kActual};
-        {kSub}) =
+    <p>F<sub>крит</sub>( &#11393; , k<sub>факт</sub> , k<sub>залиш</sub>) = F<sub>крит</sub>( 0,01;{kfac};
+        {kzal}) =
         <label class="col-form-label col-form-label-lg" style="display: inline; width: auto;">
             <input class="form-control form-control-lg" style="display: inline; width: auto;" type=number
                    bind:value={fCritical}>
@@ -181,14 +169,18 @@
     <hr class="my-4">
 
     <h4>8. Висновок.</h4>
-    {#if fCritical !== 0 && (MsActual(summery) / MsAll(courses, factors, average)).toFixed(2) >= fCritical}
+    {#if fCritical !== 0 && femp.toFixed(2) >= fCritical}
+
         <p>Оскільки F<sub>емп</sub> &#8805; F<sub>крит</sub>, то H<sub>0</sub> - відхиляється,</p>
         <p>Приймається H<sub>1</sub> - фактор освіти на заробітну плату програмістів вливає.</p>
         <p>При цьому можливо знайти силу впливу цього фактору</p>
-        <p>n<sup>2</sup> = (SS<sub>факт</sub>/SS<sub>загальна</sub>) * 100% = ({dActual(summery)}
-            / {dAll(summery, factors)}) * 100%
-            = {Math.ceil((dActual(summery) / dAll(summery, factors)) * 100)}%</p>
-    {:else if fCritical !== 0 && (MsActual(summery) / MsAll(courses, factors, average)).toFixed(2) <= fCritical}
+        <p>
+            n<sup>2</sup> = (SS<sub>факт</sub>/SS<sub>загальна</sub>) * 100% = ({1}
+            / {1}) * 100%
+            = {Math.ceil((dfac / dzag) * 100)}%
+        </p>
+
+    {:else if fCritical !== 0 && (femp).toFixed(2) <= fCritical}
         <p>Оскільки F<sub>емп</sub> &#8804; F<sub>крит</sub>, то H<sub>1</sub> - відхиляється,</p>
         <p>Приймається H<sub>0</sub> - фактор освіти на заробітну плату програмістів не вливає.</p>
     {/if}

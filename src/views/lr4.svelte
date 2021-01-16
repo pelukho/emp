@@ -360,14 +360,14 @@
             <td><img src="./img/10.png" alt=""></td>
             <td>
                 {#if Fa < Fcritical2}
-                    F<sub>A</sub> &lt; F<sub>крит</sub> - H0 відхиляється <br>
+                    F<sub>A</sub> &lt; F<sub>крит</sub> - H0 приймається<br>
                 {:else}
-                    F<sub>A</sub> &gt; F<sub>крит</sub> - HO приймається <br>
+                    F<sub>A</sub> &gt; F<sub>крит</sub> - HO відхиляється <br>
                 {/if}
                 {#if Fb < Fcritical2}
-                    F<sub>B</sub> &lt; F<sub>крит</sub> - H0 відхиляється <br>
+                    F<sub>B</sub> &lt; F<sub>крит</sub> - H0 приймається <br>
                 {:else}
-                    F<sub>B</sub> &gt; F<sub>крит</sub> - HO приймається <br>
+                    F<sub>B</sub> &gt; F<sub>крит</sub> - HO відхиляється <br>
                 {/if}
                 {#if Fab >= Fcritical2}
                     F<sub>AB</sub> &GreaterEqual; F<sub>крит</sub> - H0 спростовується <br>

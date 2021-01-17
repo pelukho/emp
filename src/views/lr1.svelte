@@ -20,12 +20,16 @@
         // ширина iнтервала
         stepOfInterval = (randomNumbers[randomNumbers.length - 1] - randomNumbers[0]) / l;
 
+    function getMaxOfArray(numArray) {
+        return Math.max.apply(null, numArray);
+    }
+
     // интервалы
     const getNewIntervals = () => {
         let tmp = [];
         let result = [];
         let firstStep = randomNumbers[0];
-        let lastStep = randomNumbers[randomNumbers.length - 1];
+        let lastStep = randomNumbers[randomNumbers.length - 1] + 1;
 
         for (let i = 0; i <= l; i++) {
             tmp.push(firstStep);
@@ -105,16 +109,20 @@
             return Math.floor(intervals[indexOfMax].x1 + (Math.floor(stepOfInterval) * ((max - table.ni[indexOfMax - 1]) / ((2 * max) - table.ni[indexOfMax - 1] - table.ni[indexOfMax + 1]))));
         },
         mediana = (randomNumbers[(n / 2) - 1] + randomNumbers[n / 2]) / 2,
-        xSer = () =>  ((randomNumbers.reduce((sum, item) => {return sum += item }, 0)) / randomNumbers.length).toFixed(1),
+        xSer = () => ((randomNumbers.reduce((sum, item) => {
+            return sum += item
+        }, 0)) / randomNumbers.length).toFixed(1),
         D = () => {
-            let average = xSer();
+            let average = +xSer();
             let sum = 0;
 
             for (let i = 0, len = table.medianaInterval.length; i < len; i++) {
-                sum += ((table.medianaInterval[i]) ** 2) * table.ni[i];
+                sum += ((table.medianaInterval[i] - average) ** 2) * table.ni[i];
+
+                console.log(table.medianaInterval[i], average, table.ni[i]);
             }
 
-            return ((sum / n) - (average ** 2)).toFixed(2);
+            return (sum / n).toFixed(2);
         },
         Qser = Math.sqrt(D()),
         V = ((Qser / xSer()) * 100).toFixed(0),
@@ -142,10 +150,6 @@
 
             return (m4 / (Qser ** 4) - 3).toFixed(2);
         };
-
-    function getMaxOfArray(numArray) {
-        return Math.max.apply(null, numArray);
-    }
 
     // сортировка
     randomNumbers = randomNumbers.sort(sortElements);
@@ -428,17 +432,27 @@
             lineTension: 0.1
         }]
     };
+
+    let getTable = () => {
+        let html = '<table><tbody><tr>';
+
+        randomNumbers.forEach((item, index) => {
+            html += `<td>${item}</td>`;
+            if ((index + 1) % 20 === 0 ) {
+                html += '</tr><tr>'
+            }
+        });
+
+        html += '</tr></tbody></table>';
+
+        return html;
+    };
 </script>
 
 <h2>
     Випадкові числа
 </h2>
-{#each randomNumbers.sort(sortElements) as number, index}
-    {number}
-    {#if (index + 1) % 20 === 0 }
-        {@html '<br/>'}
-    {/if}
-{/each}
+{@html getTable()}
 
 <h2 class="mt-5">Таблиця частот</h2>
 <div class="table-responsive mb-5">

@@ -1,140 +1,171 @@
 <script>
     let randomNumbers = [
-        51, 51, 51, 52, 52, 52, 52, 52, 53, 53, 53, 53, 53, 54, 54, 54, 54, 54, 55, 55,
-        55, 55, 56, 56, 56, 56, 56, 56, 56, 56, 57, 57, 57, 57, 57, 57, 57, 57, 57, 57,
-        58, 58, 58, 58, 58, 59, 59, 59, 60, 60, 60, 61, 61, 61, 61, 61, 62, 62, 63, 64,
-        64, 64, 64, 66, 66, 66, 66, 66, 66, 67, 67, 67, 67, 68, 68, 69, 69, 69, 70, 70,
-        70, 70, 71, 71, 72, 72, 72, 72, 72, 73, 74, 74, 74, 74, 74, 75, 75, 75, 75, 75,
-        76, 76, 76, 77, 77, 77, 78, 78, 79, 79, 79, 79, 79, 80, 80, 80, 80, 81, 81, 81,
-        81, 81, 81, 81, 82, 82, 83, 83, 83, 83, 83, 83, 84, 84, 84, 84, 84, 85, 85, 85,
-        85, 86, 86, 86, 86, 86, 87, 87, 87, 88, 88, 88, 88, 88, 89, 89, 91, 91, 91, 92,
-        92, 93, 93, 93, 93, 94, 94, 94, 94, 94, 94, 95, 95, 95, 95, 95, 96, 96, 96, 96,
-        96, 97, 98, 98, 98, 98, 98, 98, 98, 98, 99, 99, 99, 99, 100, 100, 100, 100, 100, 100,
-    ];
-
-    let length = randomNumbers.length,
-        relativeFreq = [],
-        freaq = [],
-        mediana = [],
-        acumulateFreaq = [],
-        relativeAcumulateFreaq = [],
-        empic = [],
-        sum = 0,
-        sum1 = 0,
-        sum2 = 0,
-        xx = 0,
-        sortElements = (a, b) => a - b;
-
-    function getMaxOfArray(numArray) {
-        return Math.max.apply(null, numArray);
-    }
-
-    // сортировка
-    randomNumbers = randomNumbers.sort(sortElements);
-
-    // количество интервалов
-    const intervalCount = Math.ceil(1 + 3.32 * (Math.log10(length)));
-
-    let intervalsArr = [];
-    for (let i = 1; i <= intervalCount; i++) {
-        intervalsArr.push(i);
-    }
-
-    // ширина интервала
-    const stepOfInterval = (randomNumbers[randomNumbers.length - 1] - randomNumbers[0]) / intervalCount;
+            51, 51, 51, 52, 52, 52, 52, 52, 53, 53, 53, 53, 53, 54, 54, 54, 54, 54, 55, 55,
+            55, 55, 56, 56, 56, 56, 56, 56, 56, 56, 57, 57, 57, 57, 57, 57, 57, 57, 57, 57,
+            58, 58, 58, 58, 58, 59, 59, 59, 60, 60, 60, 61, 61, 61, 61, 61, 62, 62, 63, 64,
+            64, 64, 64, 66, 66, 66, 66, 66, 66, 67, 67, 67, 67, 68, 68, 69, 69, 69, 70, 70,
+            70, 70, 71, 71, 72, 72, 72, 72, 72, 73, 74, 74, 74, 74, 74, 75, 75, 75, 75, 75,
+            76, 76, 76, 77, 77, 77, 78, 78, 79, 79, 79, 79, 79, 80, 80, 80, 80, 81, 81, 81,
+            81, 81, 81, 81, 82, 82, 83, 83, 83, 83, 83, 83, 84, 84, 84, 84, 84, 85, 85, 85,
+            85, 86, 86, 86, 86, 86, 87, 87, 87, 88, 88, 88, 88, 88, 89, 89, 91, 91, 91, 92,
+            92, 93, 93, 93, 93, 94, 94, 94, 94, 94, 94, 95, 95, 95, 95, 95, 96, 96, 96, 96,
+            96, 97, 98, 98, 98, 98, 98, 98, 98, 98, 99, 99, 99, 99, 100, 100, 100, 100, 100, 100,
+        ],
+        n = randomNumbers.length,
+        // кiлькiсть iнтервалiв
+        l = Math.ceil(1 + 3.32 * (Math.log10(n))),
+        // ширина iнтервала
+        stepOfInterval = (randomNumbers[randomNumbers.length - 1] - randomNumbers[0]) / l;
 
     // интервалы
-    const getIntervals = () => {
-        let arr = [];
+    const getNewIntervals = () => {
+        let tmp = [];
+        let result = [];
         let firstStep = randomNumbers[0];
         let lastStep = randomNumbers[randomNumbers.length - 1] + 1;
 
-        for (let i = 0; i <= intervalCount; i++) {
-            arr.push(firstStep);
+        for (let i = 0; i <= l; i++) {
+            tmp.push(firstStep);
             firstStep += Math.floor(stepOfInterval);
         }
 
-        arr.push(lastStep);
+        tmp.push(lastStep);
 
-        return arr;
+        for (let i = 0; i < tmp.length - 1; i++) {
+            result.push({
+                x1: tmp[i],
+                x2: tmp[i + 1]
+            });
+        }
+
+        return result;
     };
 
     // Подсчет частоты вхождений
-    let calculeteFreq = () => {
-        const intervals = getIntervals();
+    let calculeteNewFreq = (isRelative = false) => {
+        const intervals = getNewIntervals();
+        let result = [];
 
         // подсчет вхождений в интревал
-        for (let i = 0, len = intervals.length; i < len - 1; i++) {
+        for (let i = 0, len = intervals.length; i < len; i++) {
             let sum = 0;
-            for (let j = 0, l = randomNumbers.length; j < l; j++) {
-                if (randomNumbers[j] >= Math.floor(intervals[i])
-                    && randomNumbers[j] < Math.floor(intervals[i + 1])
+            for (let j = 0; j < n; j++) {
+                if (randomNumbers[j] >= Math.floor(intervals[i].x1)
+                    && randomNumbers[j] < Math.floor(intervals[i].x2)
                 ) {
                     sum++;
                 }
-                if (randomNumbers[j] <= Math.floor(intervals[i + 1])
-                    && intervals[intervals.length - 1] === randomNumbers[j]
+
+                if (randomNumbers[j] <= Math.floor(intervals[i].x2)
+                    && intervals[intervals.length - 1].x2 === randomNumbers[j]
                 ) {
                     sum++;
                 }
             }
 
-            freaq.push(sum);
-            relativeFreq.push(sum / length);
-        }
-    };
-    calculeteFreq();
-
-    let calculateMediana = () => {
-        const intervals = getIntervals();
-
-        for (let i = 1, len = intervals.length; i < len; i++) {
-            mediana.push(((intervals[i - 1] + intervals[i]) / 2).toFixed(2));
-        }
-    };
-    calculateMediana();
-
-    // выборочное среднее
-    let calculateSelectedAverage = () => {
-        let sum = 0;
-
-        for (let i = 0, len = mediana.length; i < len; i++) {
-            sum += mediana[i] * freaq[i];
+            if (isRelative) {
+                result.push(sum / n);
+            } else {
+                result.push(sum);
+            }
         }
 
-        return ((1 / length) * sum).toFixed(2);
+        return result;
     };
 
-    // дисперсия
-    let calculateDisp = () => {
-        let average = calculateSelectedAverage();
-        let sum = 0;
+    let table = {
+            intervals: getNewIntervals(),
+            ni: calculeteNewFreq(), // частота
+            Wi: calculeteNewFreq(true),  // вiдносна частота
+            // накопичувальна частота
+            get sumNi() {
+                let sum = 0;
+                return this.ni.map(item => sum += item);
+            },
+            // вiдносна накопичувальна частота
+            get sumWi() {
+                let sum = 0;
+                return this.Wi.map(item => sum += item);
+            },
+            get medianaInterval() {
+                return this.intervals.map(item => ((item.x1 + item.x2) / 2))
+            }
+        },
+        styles = 'min-width: 100px',
+        sortElements = (a, b) => a - b,
+        moda = () => {
+            const intervals = getNewIntervals();
+            let max = getMaxOfArray(table.ni);
+            let indexOfMax = table.ni.indexOf(max);
 
-        for (let i = 0, len = mediana.length; i < len; i++) {
-            sum += (freaq[i] * mediana[i] ** 2);
-        }
+            return Math.floor(intervals[indexOfMax].x1 + (Math.floor(stepOfInterval) * ((max - table.ni[indexOfMax - 1]) / ((2 * max) - table.ni[indexOfMax - 1] - table.ni[indexOfMax + 1]))));
+        },
+        mediana = (randomNumbers[(n / 2) - 1] + randomNumbers[n / 2]) / 2,
+        xSer = () => ((randomNumbers.reduce((sum, item) => {
+            return sum += item
+        }, 0)) / randomNumbers.length).toFixed(1),
+        D = () => {
+            let average = +xSer();
+            let sum = 0;
 
-        return (((1 / length) * sum) - (average) ** 2).toFixed(2);
-    };
+            for (let i = 0, len = table.medianaInterval.length; i < len; i++) {
+                sum += ((table.medianaInterval[i] - average) ** 2) * table.ni[i];
 
-    // квадратическое отклонение
-    let calculateSquareDisp = () => {
-        return (Math.sqrt(calculateDisp())).toFixed(2);
-    };
+                console.log(table.medianaInterval[i], average, table.ni[i]);
+            }
+
+            return (sum / n).toFixed(2);
+        },
+        Qser = Math.sqrt(D()),
+        V = ((Qser / xSer()) * 100).toFixed(0),
+        As = () => {
+            let sum = 0;
+            let average = xSer();
+
+            for (let i = 0, len = table.medianaInterval.length; i < len; i++) {
+                sum += ((table.medianaInterval[i] - average) ** 3) * table.ni[i];
+            }
+
+            let m3 = (1 / n) * sum;
+
+            return (m3 / (Qser ** 3)).toFixed(3)
+        },
+        Es = () => {
+            let sum = 0;
+            let average = xSer();
+
+            for (let i = 0, len = table.medianaInterval.length; i < len; i++) {
+                sum += ((table.medianaInterval[i] - average) ** 4) * table.ni[i];
+            }
+
+            let m4 = (1 / n) * sum;
+
+            return (m4 / (Qser ** 4) - 3).toFixed(2);
+        };
+
+    function getMaxOfArray(numArray) {
+        return Math.max.apply(null, numArray);
+    }
+
+    let length = randomNumbers.length,
+        sum = table.ni.reduce((s, i) => {return s+=i}, 0),
+        sum1 = 0,
+        sum2 = 0,
+        xx = 0;
 
     let generateDataForRows = () => {
         let data = [];
-        let intervals = getIntervals();
-        let average = calculateSelectedAverage();
-        let Q = calculateSquareDisp();
+        let intervals = getNewIntervals();
+        let average = xSer();
+        let Q = Math.sqrt(D());
         let alfa = 0.01;
         let f = [-0.450, -0.406, -0.338, -0.242, -0.125, 0.004, 0.136, 0.251, 0.343, 0.409, 0.453];
 
         for (let i = 1, len = intervals.length; i < len; i++) {
             let vars = {
-                x1: intervals[i-1],
-                x2: intervals[i],
-                n: freaq[i-1],
+                x1: intervals[i].x1,
+                x2: intervals[i].x2,
+                n: table.ni[i],
                 get z() {
                     return ((this.x1 - average) / Q).toFixed(2);
                 },
@@ -163,7 +194,6 @@
                 }
             };
 
-            sum += vars.n;
             sum1 += vars.n4;
             sum2 += vars.n6;
             xx += (vars.n ** 2 ) / vars.n1;
@@ -174,7 +204,7 @@
         return data;
 
     };
-    let k = (getIntervals().length -1) - 2 - 1;
+    let k = (getNewIntervals().length -1) - 2 - 1;
 </script>
 
 <h2>

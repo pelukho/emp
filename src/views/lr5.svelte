@@ -38,10 +38,10 @@
                 y: item
             };
         }),
-        yline = y.map(item => {
+        yline = x.map(item => {
             return {
-                x: (a0 + (a1 * item)),
-                y: item
+                x: item,
+                y: (a0 + (a1 * item))
             };
         }),
         tr = rxy * Math.sqrt((n - 2) / (1 - (rxy ** 2))),
@@ -60,7 +60,7 @@
             {
                 label: 'Кореляційне поле y',
                 data: y.map((item, index) => {
-                    return {x: item, y: x[index]}
+                    return {x: x[index], y: item}
                 }),
                 backgroundColor: '#ff69f0',
                 borderColor: '#f81981',

@@ -118,8 +118,6 @@
 
             for (let i = 0, len = table.medianaInterval.length; i < len; i++) {
                 sum += ((table.medianaInterval[i] - average) ** 2) * table.ni[i];
-
-                console.log(table.medianaInterval[i], average, table.ni[i]);
             }
 
             return (sum / n).toFixed(2);
@@ -150,6 +148,8 @@
 
             return (m4 / (Qser ** 4) - 3).toFixed(2);
         };
+
+    console.log(randomNumbers[(n / 2) - 1], randomNumbers[n / 2]);
 
     // сортировка
     randomNumbers = randomNumbers.sort(sortElements);

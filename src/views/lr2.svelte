@@ -110,8 +110,6 @@
 
             for (let i = 0, len = table.medianaInterval.length; i < len; i++) {
                 sum += ((table.medianaInterval[i] - average) ** 2) * table.ni[i];
-
-                console.log(table.medianaInterval[i], average, table.ni[i]);
             }
 
             return (sum / n).toFixed(2);
